@@ -6,7 +6,14 @@ const port = process.env.PORT || 5000;
 const expressHbs = require('express-handlebars');
 const {createStarList} = require('./controllers/handlebarsHelper');  //import helper
 const { createPagination} = require('express-handlebars-paginate');  //import helper
-const session = require('express-session')
+const session = require('express-session');
+const redisStore = require('connect-redis').default;
+const { createClient } = require('redis');
+const redisClient = createClient({
+    //url: 'rediss://red-col6j4q0si5c73e701sg:5O3SlxhtD4WL2yHm4HLa5V11OqtUzXeh@singapore-redis.render.com:6379'
+    url: 'redis://red-col6j4q0si5c73e701sg:6379'
+});
+redisClient.connect().catch(console.error);
 
 //cau hinh public static folder
 app.use(express.static(__dirname + '/public'));
@@ -33,7 +40,8 @@ app.use(express.urlencoded({ extended: false }));
 
 //cau hinh session - cai dat session: pnpm install express-session || pnpm i -s express-session
 app.use(session({
-    secret: 'S3cret', //chuoi bi mat de ma hoa session id 
+    secret: 'S3cret', //chuoi bi mat de ma hoa session id
+    store: new redisStore({ client: redisClient }),  //luu session vao redis 
     resave: false,  //session chi duoc luu lai khi co su thay doi 
     saveUninitialized: false,   //session duoc tao ra ngay lap tuc ma khong can su kien gi xay ra 
     cookie: {
