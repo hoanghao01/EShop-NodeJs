@@ -25,4 +25,8 @@ router.post('/placeorders',
         next(); //neu khong co loi thi chuyen tiep
     },  
     controller.placeorders);
+
+router.get('/my-account', (req, res) => {
+    res.render('my-account');
+});
 module.exports = router;
