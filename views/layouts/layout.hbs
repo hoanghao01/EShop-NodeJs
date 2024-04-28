@@ -46,10 +46,11 @@
                             {{#if isLoggedIn}}
                             <div class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Account</a>
-                                <div class="dropdown-menu">
-                                    <a href="#" class="dropdown-item">Login</a>
-                                    <a href="#" class="dropdown-item">Register</a>
-                                </div>
+                            </div>
+                            <div class="dropdown-menu">
+                                <a href="/users/my-account" class="dropdown-item">Profile</a>
+                                <a href="/users/wishlist" class="dropdown-item">Wishlist</a>
+                                <a href="/users/logout" class="dropdown-item">Logout</a>
                             </div>
                             {{else}}
                             <div class="droppdown">
@@ -57,8 +58,10 @@
                             </div>
                             {{/if}}
                             <div class="cart">
-                                <a href="/products/cart"><i class="fa fa-cart-plus"></i></a>
-                                <span id="cart-quantity">({{{quantity}}})</span>
+                                <a href="/products/cart">
+                                    <i class="fa fa-cart-plus"></i>
+                                    <span id="cart-quantity">{{{quantity}}}</span>
+                                </a>
                             </div>
                         </div>
                     </div>
