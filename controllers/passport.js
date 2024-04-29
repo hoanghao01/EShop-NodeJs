@@ -54,4 +54,37 @@ passport.use('local-login', new LocalStrategy({
         done(error);    
     }
 }));
+
+//ham dang ky tai khoan
+passport.use('local-register', new LocalStrategy({
+    usernameField: 'email',    //ten truong email trong form dang ky
+    passwordField: 'password', //ten truong password trong form dang ky
+    passReqToCallback: true    //cho phep truyen req vao callback de kiem tra user da dang nhap hay chua
+}, async (req, email, password, done) => {
+    if (email) {
+        email = email.toLowerCase();   //chuyen email ve chu thuong
+    }
+    if (req.user) {
+        return done(null, req.user);    //bo qua neu da dang nhap    
+    }
+    try {
+        let user = await models.User.findOne({ where: { email } });
+        if (user) {
+            return done(null, false, req.flash('registerMessage', 'Email is already taken!')); //bao loi neu email da ton tai
+        }
+
+        user = await models.User.create({
+            email: email,
+            password: bcrypt.hashSync(password, bcrypt.genSaltSync(8)), //ma hoa mat khau
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
+            mobile: req.body.mobile,
+        });    //tao user moi
+        //thong bao dang ky thanh cong
+        done(null, false, req.flash('registerMessage', 'You have registered successfully. Please login!'));
+
+    } catch (error) {
+        done(error);
+    }
+}));
 module.exports = passport;

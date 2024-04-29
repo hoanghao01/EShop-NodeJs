@@ -1,7 +1,5 @@
 'use strict'
 
-const { add } = require("../../controllers/cartController");
-
 async function addCart(id, quantity) {
     let res = await fetch('/products/cart', {
         method: 'POST',
@@ -91,7 +89,18 @@ function placeorders(e) {
         if (!e.target.checkValidity()) {
             return e.target.reportValidity();  //hien thi loi neu khong nhap day du thong tin
         }
+    }
+    e.target.submit();  //gui form neu da nhap day du thong tin
+}
 
-        e.target.submit();
+function checkPasswordConfirm(formId) {
+    let password = document.querySelector(`#${formId} input[name=password]`).value; //lay mat khau nhap vao form dang ky
+    let confirmPassword = document.querySelector(`#${formId} input[name=confirmPassword]`).value;  //lay mat khau nhap lai
+
+    if (password.value != confirmPassword.value) {
+        confirmPassword.setCustomValidity('Passwords do not match!');  //hien thi loi neu mat khau khong khop
+        confirmPassword.reportValidity();   //bao loi
+    } else {
+        confirmPassword.setCustomValidity('');  //an loi neu mat khau giong nhau
     }
 }
