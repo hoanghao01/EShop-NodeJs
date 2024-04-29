@@ -14,7 +14,7 @@ function sendForgotPasswordMail(user, host, resetLink) {
             Messages: [
                 {
                     From: {
-                        Email: "ttbhanh.test@gmail.com",
+                        Email: "haongnguyen6345@gmail.com",
                         Name: "EShop"
                     },
                     To: [

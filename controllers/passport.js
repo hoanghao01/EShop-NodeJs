@@ -2,7 +2,7 @@
 
 const passport = require('passport');
 const LocalStrategy = require("passport-local");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 //const LocalStrategy = require('passport-local');
 //const bcrypt = require('bcrypt');
 const models = require('../models');
@@ -35,7 +35,7 @@ passport.use('local-login', new LocalStrategy({
         email = email.toLowerCase();   //chuyen email ve chu thuong
     }
     try {
-        if (!req.user) {    //neu chua dang nhap
+        if (!req.user) {    //neu user chua dang nhap
             let user = await models.User.findOne({
                 where: { email }
             });

@@ -11,11 +11,11 @@ controller.show = (req, res) => {
     res.render('login', { loginMessage: req.flash('loginMessage'), reqUrl: req.query.reqUrl, registerMessage: req.flash('registerMessage')});
 };
 
-controller.login = (req, res) => {
+controller.login = (req, res, next) => {
     let keepSignedIn = req.body.keepSignedIn;
-    let reqUrl = req.body.reqUrl ? req.body.reqUrl : '/user/my-account';
+    let reqUrl = req.body.reqUrl ? req.body.reqUrl : '/users/my-account';
     let cart = req.session.cart;
-    passport.authenticate('local-login', (err, user) => {
+    passport.authenticate('local-login', (error, user) => {
         if (error) {
             return next(error);
         }
@@ -28,7 +28,8 @@ controller.login = (req, res) => {
             }
             req.session.cookie.maxAge = keepSignedIn ? 24 * 60 * 60 * 1000 : null;
             req.session.cart = cart;    //dang nhap thanh cong thi luu gio hang lai 
-            return res.redirect(reqUrl);
+            console.log(reqUrl);
+            return res.redirect(reqUrl);    //chuyen huong ve trang my-account
         });
     })(req, res, next)
 };
@@ -52,7 +53,7 @@ controller.isLoggedIn = (req, res, next) => {
 }
 
 controller.register = (req, res, next) => {
-    let reqUrl = req.body.reqUrl ? req.body.reqUrl : '/user/my-account';
+    let reqUrl = req.body.reqUrl ? req.body.reqUrl : '/users/my-account';
     let cart = req.session.cart;
     passport.authenticate('local-register', (error, user) => {
         if (error) {
@@ -75,13 +76,13 @@ controller.showForgotPassword = (req, res) => {
     res.render('forgot-password');
 }
 
-controller.showForgotPassword =async (req, res) => {
+controller.forgotPassword =async (req, res) => {
     let email = req.body.email;
     //kiem tra email ton tai
     let user = await models.User.findOne({ where: { email } });
     if (user) {
         //Tao link
-        const { sign } = require('.jwt');
+        const { sign } = require('./jwt');
         const host = req.header('host');
         const resetLink = `${req.protocol}://${host}/users/reset?token=${sign(email)}&email=${email}`;
         //Gui email
@@ -105,12 +106,23 @@ controller.showResetPassword = (req, res) => {
     let token = req.query.token;
     let email = req.query.email;
     const { verify } = require('./jwt');
-    if (verify(token, email)) {
-        res.render('reset-password', { email });
+    if (!token || !verify(token)) {
+        return res.render('reset-password', { expired: true });
     } else {
-        res.redirect('/users/forgot');
+        return res.render('reset-password', { email, token });
     }
 }
-controller.resetPassword = (req, res) => {}
+controller.resetPassword = async (req, res) => {
+    let email = req.body.email;
+    let token = req.body.token;
+    let bcrypt = require('bcryptjs');
+    let password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(8));
+
+    await models.User.update(
+        { password }, 
+        { where: { email } }
+    );
+    res.render('reset-password', { done: true });
+}
 
 module.exports = controller;

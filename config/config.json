@@ -1,11 +1,6 @@
 {
   "development": {
-    
-    "username": "postgres",
-    "password": "1234",
-    "database": "eshopDB",
-    "host": "127.0.0.1",
-    "dialect": "postgres"
+    "use_env_variable": "POSTGRES_URL"
   },
   "test": {
     "username": "postgres",
@@ -15,7 +10,7 @@
     "dialect": "postgres"
   },
   "production": {
-    "use_env_variable": "POSTGRES_URL",
+    
     "dialect": "postgres",
     "dialectOptions": {
       "ssl": {

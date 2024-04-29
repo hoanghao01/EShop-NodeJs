@@ -94,8 +94,8 @@ function placeorders(e) {
 }
 
 function checkPasswordConfirm(formId) {
-    let password = document.querySelector(`#${formId} input[name=password]`).value; //lay mat khau nhap vao form dang ky
-    let confirmPassword = document.querySelector(`#${formId} input[name=confirmPassword]`).value;  //lay mat khau nhap lai
+    let password = document.querySelector(`#${formId} input[name=password]`); //lay mat khau nhap vao form dang ky
+    let confirmPassword = document.querySelector(`#${formId} input[name=confirmPassword]`);  //lay mat khau nhap lai
 
     if (password.value != confirmPassword.value) {
         confirmPassword.setCustomValidity('Passwords do not match!');  //hien thi loi neu mat khau khong khop

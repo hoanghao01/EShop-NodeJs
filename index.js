@@ -67,7 +67,7 @@ app.use((req, res, next) => {
     let Cart = require('./controllers/cart');
     req.session.cart = new Cart(req.session.cart ? req.session.cart : {});  //tao gio hang moi neu chua co gio hang trong session 
     res.locals.quantity = req.session.cart.quantity;
-    res.locals.isLogin = req.isAuthenticated();  //kiem tra xem da dang nhap chua
+    res.locals.isLoggedIn = req.isAuthenticated();  //kiem tra xem da dang nhap chua
 
     next();
 });
